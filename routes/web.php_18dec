@@ -1,0 +1,415 @@
+<?php
+
+use App\Http\Controllers\AssetsController;
+use App\Http\Controllers\EmployeeAcadamicdetailsController;
+use App\Http\Controllers\EmployeeAddressController;
+use App\Http\Controllers\EmployeEditController;
+use App\Http\Controllers\EmployeeFamilyController;
+use App\Http\Controllers\EmployeeResidentialController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomAuthController;
+use App\Http\Controllers\Emp_attachements_info;
+use App\Http\Controllers\Emp_bank_info;
+use App\Http\Controllers\Emp_family_info;
+use App\Http\Controllers\Emp_hr_info;
+use App\Http\Controllers\Emp_personal_info;
+use App\Http\Controllers\Emp_previous_info;
+use App\Http\Controllers\Emp_salary_info;
+use App\Http\Controllers\EmployeeController;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Message;
+use App\Http\Controllers\GmailController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Emp_basic_info;
+
+
+Auth::routes();
+
+Route::get('/home', 'App\Http\Controllers\HomeController@index');
+Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::any('users_list', array(
+    'uses' => 'App\Http\Controllers\UserController@user',
+    'as'   => 'users_list'
+));
+
+Route::any('add_user', array(
+    'uses' => 'App\Http\Controllers\UserController@addEmployees',
+    'as'   => 'add_user'
+));
+
+Route::any('employee_json', array(
+    'uses' => 'App\Http\Controllers\UserController@employeejson',
+    'as'   => 'employee_json'
+));
+
+Route::any('get_users/{user_id}', array(
+    'uses' => 'App\Http\Controllers\UserController@getUsers',
+    'as'   => 'get_users'
+));
+
+Route::any('update_users', array(
+    'uses' => 'App\Http\Controllers\UserController@updateUser',
+    'as'   => 'update_users'
+));
+
+Route::any('delete_user/{id}/{status}', array(
+    'uses' => 'App\Http\Controllers\UserController@deleteUser',
+    'as'   => 'delete_user'
+));
+
+Route::any('user_assigned', array(
+    'uses' => 'App\Http\Controllers\UserController@userAssigned',
+    'as'   => 'user_assigned'
+));
+
+Route::any('add_user_assigned', array(
+    'uses' => 'App\Http\Controllers\UserController@addUserAssigned',
+    'as'   => 'add_user_assigned'
+));
+
+Route::any('assigned_user_json', array(
+    'uses' => 'App\Http\Controllers\UserController@assignedUserJson',
+    'as'   => 'assigned_user_json'
+));
+
+Route::any('support_view', array(
+    'uses' => 'App\Http\Controllers\SupportController@supportView',
+    'as'   => 'support_view'
+));
+Route::any('support_json', array(
+    'uses' => 'App\Http\Controllers\SupportController@supportJson',
+    'as'   => 'support_json'
+));
+Route::any('update_status', array(
+    'uses' => 'App\Http\Controllers\SupportController@updateStatus',
+    'as'   => 'update_status'
+));
+
+Route::any('assign_user', array(
+    'uses' => 'App\Http\Controllers\SupportController@assignUser',
+    'as'   => 'assign_user'
+));
+
+Route::any('view_email_body/{id}', array(
+    'uses' => 'App\Http\Controllers\SupportController@viewEmailBody',
+    'as'   => 'view_email_body'
+));
+Route::any('update_support_status', array(
+    'uses' => 'App\Http\Controllers\SupportController@updateSupportStatus',
+    'as'   => 'update_support_status'
+));
+
+Route::any('update_support_comments', array(
+    'uses' => 'App\Http\Controllers\SupportController@updateSupportComments',
+    'as'   => 'update_support_comments'
+));
+
+Route::any('support_emails', array(
+    'uses' => 'App\Http\Controllers\SupportController@supportEmails',
+    'as'   => 'support_emails'
+));
+Route::any('email_json', array(
+    'uses' => 'App\Http\Controllers\SupportController@emailJson',
+    'as'   => 'email_json'
+));
+
+Route::any('view_ticket/{id}', array(
+    'uses' => 'App\Http\Controllers\SupportController@viewTicket',
+    'as'   => 'view_ticket'
+));
+
+Route::any('view_ticket_json', array(
+    'uses' => 'App\Http\Controllers\SupportController@viewTicketJson',
+    'as'   => 'view_ticket_json'
+));
+
+Route::any('ticket_details', array(
+    'uses' => 'App\Http\Controllers\SupportController@addTicketDetails',
+    'as'   => 'ticket_details'
+));
+
+Route::any('update_details', array(
+    'uses' => 'App\Http\Controllers\SupportController@updateDetails',
+    'as'   => 'update_details'
+));
+
+Route::any('timesheets', array(
+    'uses' => 'App\Http\Controllers\TimesheetController@timesheets',
+    'as'   => 'timesheets'
+));
+
+Route::any('timesheet_details', array(
+    'uses' => 'App\Http\Controllers\TimesheetController@addTimesheetDetails',
+    'as'   => 'timesheet_details'
+));
+
+Route::any('projects', array(
+    'uses' => 'App\Http\Controllers\ProjectController@Project',
+    'as'   => 'projects'
+));
+
+Route::any('add_project', array(
+    'uses' => 'App\Http\Controllers\ProjectController@addProject',
+    'as'   => 'add_project'
+));
+
+Route::any('project_json', array(
+    'uses' => 'App\Http\Controllers\ProjectController@projectjson',
+    'as'   => 'project_json'
+));
+
+Route::any('add_ticket', array(
+    'uses' => 'App\Http\Controllers\SupportController@addTicket',
+    'as'   => 'add_ticket'
+));
+
+Route::any('timesheets_list', array(
+    'uses' => 'App\Http\Controllers\TimesheetController@timesheetsList',
+    'as'   => 'timesheets_list'
+));
+
+Route::any('timesheets_json', array(
+    'uses' => 'App\Http\Controllers\TimesheetController@timesheetsJson',
+    'as'   => 'timesheets_json'
+));
+
+
+Route::any('user_domain', array(
+    'uses' => 'App\Http\Controllers\UserController@userDomain',
+    'as'   => 'user_domain'
+));
+
+Route::any('add_domain', array(
+    'uses' => 'App\Http\Controllers\UserController@addDomain',
+    'as'   => 'add_domain'
+));
+
+Route::any('domain_json', array(
+    'uses' => 'App\Http\Controllers\UserController@domainjson',
+    'as'   => 'domain_json'
+));
+
+Route::any('get_domain/{user_id}', array(
+    'uses' => 'App\Http\Controllers\UserController@getDomain',
+    'as'   => 'get_domain'
+));
+
+Route::any('update_user_domain', array(
+    'uses' => 'App\Http\Controllers\UserController@updateUserDomain',
+    'as'   => 'update_user_domain'
+));
+Route::any('delete_domain/{id}/{status}', array(
+    'uses' => 'App\Http\Controllers\UserController@deleteDomain',
+    'as'   => 'delete_domain'
+));
+
+Route::any('company_details', array(
+    'uses' => 'App\Http\Controllers\ProjectController@CompanyDetails',
+    'as'   => 'company_details'
+));
+Route::any('edit_company_details/{id}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@editCompanyDetails',
+    'as'   => 'edit_company_details'
+));
+Route::put('update_company_details/{id}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@updateCompanyDetails',
+    'as'   => 'update_company_details'
+));
+Route::any('edit_primary_contact/{id}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@editPrimaryContact',
+    'as'   => 'edit_primary_contact'
+));
+Route::put('update_primary_contact/{id}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@updatePrimaryContact',
+    'as'   => 'update_primary_contact'
+));
+Route::any('edit_sub_contacts/{id}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@editSubContacts',
+    'as'   => 'edit_sub_contacts'
+));
+Route::put('update_sub_contacts/{id}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@updateSubContacts',
+    'as'   => 'update_sub_contacts'
+));
+
+Route::any('delete_customer/{id}/{status}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@deleteCustomer',
+    'as'   => 'delete_customer'
+));
+
+Route::any('view_customer/{id}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@viewCustomerDetails',
+    'as'   => 'view_customer'
+));
+Route::any('get_customer/{id}', array(
+    'uses' => 'App\Http\Controllers\ProjectController@getCustomer',
+    'as'   => 'get_customer'
+));
+
+Route::any('update_customer', array(
+    'uses' => 'App\Http\Controllers\ProjectController@updateCustomer',
+    'as'   => 'update_customer'
+));
+
+Route::any('get_status_loop/{ticket_id}', array(
+    'uses' => 'App\Http\Controllers\SupportController@getStatus',
+    'as'   => 'get_status_loop'
+));
+
+Route::any('get_timesheet_description/{id}', array(
+    'uses' => 'App\Http\Controllers\TimesheetController@getDescription',
+    'as'   => 'get_timesheet_description'
+));
+
+Route::any('hr_information', array(
+    'uses' => 'App\Http\Controllers\EmployeeController@Hrinformation',
+    'as'   => 'hr_information'
+));
+
+Route::any('information', array(
+    'uses' => 'App\Http\Controllers\EmployeeController@Hrinformation',
+    'as'   => 'information'
+));
+
+Route::any('familyinformation', array(
+    'uses' => 'App\Http\Controllers\EmployeeController@FamilyInformation',
+    'as' =>  'familyinformation'
+));
+
+Route::any('previous', array(
+    'uses' => 'App\Http\Controllers\EmployeeController@PreviousEmployement',
+    'as' =>  'previous'
+));
+
+Route::any('attachements', array(
+    'uses' => 'App\Http\Controllers\EmployeeController@FamilyInformation',
+    'as' =>  'attachements'
+));
+
+Route::any('bankinformation', array(
+    'uses' => 'App\Http\Controllers\EmployeeController@FamilyInformation',
+    'as' =>  'bankinformation'
+));
+
+
+
+Route::any('salary', array(
+    'uses' => 'App\Http\Controllers\EmployeeController@SalaryStructure',
+    'as' =>  'salary'
+));
+
+
+Route::middleware('checkRole:1, 5')->group(function () {
+
+    //--------------------ASSETS CONTROLLER-----------------------------------------------
+    Route::any('update_assets', array(
+        'uses' => 'App\Http\Controllers\AssetsController@updateAssets',
+        'as' =>  'update_assets'
+    ));
+    Route::any('get_assets/{id}', array(
+        'uses' => 'App\Http\Controllers\AssetsController@getAssets',
+        'as'   => 'get_assets'
+    ));
+    Route::any('assets', array(
+        'uses' => 'App\Http\Controllers\AssetsController@userAssets',
+        'as'   => 'assets'
+    ));
+    Route::any('asset-json', array(
+        'uses' => 'App\Http\Controllers\AssetsController@assetjson',
+        'as'   => 'asset-json'
+    ));
+    Route::any('add_asset', array(
+        'uses' => 'App\Http\Controllers\AssetsController@addAsset',
+        'as'   => 'add_asset'
+    ));
+    Route::any('delete_assets/{id}/{status}', array(
+        'uses' => 'App\Http\Controllers\AssetsController@deleteAssets',
+        'as'   => 'delete_assets'
+    ));
+    //--------------------ASSETS CONTROLLER-----------------------------------------------
+
+    // Route::get('/assets_view/{uniqueId}', [App\Http\Controllers\AssetsController::class, 'showDetails']);
+    Route::get('assets_view/{id}',[AssetsController::class, 'showDetails'])->name('assets_view/{id}');
+
+});
+
+
+Route::get('/changePassword', [App\Http\Controllers\UserController::class, 'showChangePasswordGet'])->name('changePasswordGet');
+Route::post('/changePassword', [App\Http\Controllers\UserController::class, 'changePasswordPost'])->name('changePasswordPost');
+Route::post('replyticket', [App\Http\Controllers\SupportController::class, 'storeReplyTicket'])->name('replyticket');
+
+Route::get('report', [App\Http\Controllers\ReportController::class, 'index'])->name('time.report');
+Route::get('report_json', [App\Http\Controllers\ReportController::class, 'reportJson'])->name('report.json');
+Route::get('get_user_timelog/{userId}/{month}/{year}', [App\Http\Controllers\ReportController::class, 'getUserTimelog'])->name('time.log');
+
+
+Route::get('emp_edit/{id}', [EmployeEditController::class, 'ShowData'])->name('emp_edit');
+//Route::get('emp_edit/{id}/attachments-data', [EmployeEditController::class, 'attachmentsData'])->name('emp_edit.attachmentsData');
+
+
+//Route::view('emp_edit/{id}', 'employee.emp_edit')->name('emp_edit');
+Route::get("emp_list", [UserController::class, 'emp_list'])->name('emp_list');
+Route::post("emp_list/post", [UserController::class, 'emp_list/post'])->name('emp_list/post');
+
+Route::get('emp_edit', [EmployeeFamilyController::class, 'showfamily']);
+
+
+/*   #############  emp_hr_info ################     */
+Route::get("emp_hr_info", [Emp_hr_info::class, 'emp_hr_info'])->name('emp_hr_info');
+Route::post("emp_hr_info/post", [Emp_hr_info::class, 'SaveData'])->name('emp_hr_info/post');
+Route::get("emp_hr_info_list", [Emp_hr_info::class, 'ShowData'])->name('emp_hr_info_list');
+
+/*   #############  emp_personal_info ################     */
+Route::get('emp_personal_info', [Emp_personal_info::class, 'emp_personal_info'])->name('emp_personal_info');
+Route::post("emp_personal_info/post", [Emp_personal_info::class, 'SaveData'])->name('emp_personal_info/post');
+// Route::get("emp_personal_info_list",[Emp_personal_info::class,'ShowData'])->name('emp_personal_info_list');
+
+//------------BANK CONTROLLER-------------------------
+Route::post("emp_bank_info/post", [Emp_bank_info::class, 'SaveData'])->name('emp_bank_info/post');
+Route::get("bank", [Emp_bank_info::class, 'index']);
+Route::get("edit-bank/{id}", [Emp_bank_info::class, 'edit'])->name('edit-bank/{id}');
+Route::put("update-bank/{id}", [Emp_bank_info::class, 'update'])->name('update-bank/{id}');
+Route::get("delete-bank/{id}", [Emp_bank_info::class, 'delete'])->name('delete-bank/{id}');
+
+
+Route::get('attachements', [Emp_attachements_info::class, 'index']);
+Route::get('edit-attachements/{id}', [Emp_attachements_info::class, 'edit']);
+Route::post("emp_attachements_info/post", [Emp_attachements_info::class, 'SaveData'])->name('emp_attachements_info/post');
+Route::put('update-attachements/{id}', [Emp_attachements_info::class, 'update']);
+Route::get("delete-attachements/{id}", [Emp_attachements_info::class, 'delete'])->name('delete-attachements/{id}');
+
+Route::post("emp_salary_info/post", [Emp_salary_info::class, 'SaveData'])->name('emp_salary_info/post');
+Route::post("emp_basic_info/post", [Emp_basic_info::class, 'SaveData'])->name('emp_basic_info/post');
+
+
+Route::get('family', [EmployeeFamilyController::class, 'index']);
+Route::post("emp_family_info/post", [EmployeeFamilyController::class, 'SaveData'])->name('emp_family_info/post');
+Route::get('edit-family/{id}', [EmployeeFamilyController::class, 'edit']);
+Route::put('update-family/{id}', [EmployeeFamilyController::class, 'update'])->name('update-family/{id}');
+Route::get('delete-family/{id}', [EmployeeFamilyController::class, 'delete'])->name('delete-family/{id}');
+
+Route::get('previous', [Emp_previous_info::class, 'index']);
+Route::post("emp_previous_info/post", [Emp_previous_info::class, 'SaveData'])->name('emp_previous_info/post');
+Route::get('edit-previous/{id}', [Emp_previous_info::class, 'edit']);
+Route::put('update-previous/{id}', [Emp_previous_info::class, 'update']);
+Route::get('delete-previous/{id}', [Emp_previous_info::class, 'delete']);
+
+Route::get('residential', [EmployeeResidentialController::class, 'index']);
+Route::get('edit-residential/{id}', [EmployeeResidentialController::class, 'edit']);
+Route::put('update-residential/{id}', [EmployeeResidentialController::class, 'update']);
+Route::post("emp_residential_info/post", [EmployeeResidentialController::class, 'SaveData'])->name('emp_residential_info/post');
+Route::get('delete-residential/{id}', [EmployeeResidentialController::class, 'delete']);
+
+
+Route::get('communication', [EmployeeAddressController::class, 'index']);
+Route::post("emp_address_info/post", [EmployeeAddressController::class, 'SaveData'])->name('emp_address_info/post');
+Route::get('edit-communication/{id}', [EmployeeAddressController::class, 'edit']);
+Route::put('update-communication/{id}', [EmployeeAddressController::class, 'update']);
+Route::get('delete-communication/{id}', [EmployeeAddressController::class, 'delete']);
+
+Route::post("emp_acadamic_info/post", [EmployeeAcadamicdetailsController::class, 'SaveData'])->name('emp_acadamic_info/post');
+
+Route::get('send-visa-exp-reminder-email', [EmployeeResidentialController::class, 'sendVisaExpiryRemainder']);
